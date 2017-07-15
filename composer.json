@@ -1,0 +1,13 @@
+{
+    "name": "vendor/fcviewer",
+    "description": "Description of project fcviewer.",
+    "authors": [
+        {
+            "name": "DarkCloud",
+            "email": "your@email.here"
+        }
+    ],
+    "require": {
+        "viion/lodestone-php": "dev-master"
+    }
+}
