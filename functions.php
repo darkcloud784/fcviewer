@@ -1,6 +1,6 @@
 <?php
 
-/* 
+/*
  * The MIT License
  *
  * Copyright 2017 DarkCloud.
@@ -26,53 +26,51 @@
 
 require 'config.php';
 
-    
-function startDBConnection( $db_server, $db_user, $db_pass, $db_database, $db_port = NULL )
-{
-	if ( empty( $db_port ) )
-		$db_port = ini_get("mysqli.default_port");
-	$mysqli = new mysqli( $db_server,$db_user,$db_pass,$db_database, $db_port );
+function startDBConnection($db_server, $db_user, $db_pass, $db_database, $db_port = NULL) {
+    if (empty($db_port))
+        $db_port = ini_get("mysqli.default_port");
+    $mysqli = new mysqli($db_server, $db_user, $db_pass, $db_database, $db_port);
 
-	// Check connection
-	if( $mysqli->connect_error ) 
-		 die( "Connect Error (" . mysqli_connect_errno() . ") ". mysqli_connect_error() );
-		
-	return $mysqli;
+    // Check connection
+    if ($mysqli->connect_error)
+        die("Connect Error (" . mysqli_connect_errno() . ") " . mysqli_connect_error());
+
+    return $mysqli;
 }
 
-function closeDBConnection( $mysqli )
-{
-	$mysqli->close();
-}
-function startTime()
-{
-	if ( $GLOBALS['debug'] )
-	{
-		show( "Script started." );
-		global $start;
-		$start = microtime(true);
-	}
+function closeDBConnection($mysqli) {
+    $mysqli->close();
 }
 
-function endTime()
-{
-	if ( $GLOBALS['debug'] )
-	{
-		$finish = microtime(true);
-		show( "Memory Peak: ". cMem(memory_get_peak_usage() ) );
-		show( "Script ended." );
-	}
+function startTime() {
+    if ($GLOBALS['debug']) {
+        show("Script started.");
+        global $start;
+        $start = microtime(true);
+    }
 }
 
-function show( $data )
-{
-	if ( $GLOBALS['debug'] )
-		echo '<pre>'. print_r($data, true) .'</pre>';
+function endTime() {
+    if ($GLOBALS['debug']) {
+        $finish = microtime(true);
+        show("Memory Peak: " . cMem(memory_get_peak_usage()));
+        show("Script ended.");
+    }
 }
 
-function cMem( $size )
-{
-	$tmp = array( 'b','kb','mb','gb','tb','pb' );
-	if ( $GLOBALS['debug'] )
-		return @round( $size/pow( 1024, ( $i=floor( log( $size,1024 ) ) ) ),2 ).' '.$tmp[$i];
+function show($data) {
+    if ($GLOBALS['debug'])
+        echo '<pre>' . print_r($data, true) . '</pre>';
+}
+
+function cMem($size) {
+    $tmp = array('b', 'kb', 'mb', 'gb', 'tb', 'pb');
+    if ($GLOBALS['debug'])
+        return @round($size / pow(1024, ( $i = floor(log($size, 1024)))), 2) . ' ' . $tmp[$i];
+}
+
+function sqlError($int, $error) {
+    if ($GLOBALS['debug']) {
+        echo "SQL Error $int: $error";
+    }
 }
