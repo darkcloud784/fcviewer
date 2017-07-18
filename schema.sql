@@ -13,10 +13,6 @@
 -- Dumping structure for table classinfo
 CREATE TABLE IF NOT EXISTS `classinfo` (
   `id` int(10) NOT NULL DEFAULT '0',
-  `name` varchar(100) NOT NULL,
-  `avatar_url` tinytext,
-  `rank` tinytext,
-  `rankicon` tinytext
   `gladiator` tinyint(2) NOT NULL DEFAULT '0',
   `pugilist` tinyint(2) NOT NULL DEFAULT '0',
   `marauder` tinyint(2) NOT NULL DEFAULT '0',
@@ -42,7 +38,14 @@ CREATE TABLE IF NOT EXISTS `classinfo` (
   `miner` tinyint(2) NOT NULL DEFAULT '0',
   `botanist` tinyint(2) NOT NULL DEFAULT '0',
   `fisher` tinyint(2) NOT NULL DEFAULT '0'
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+); 
+CREATE TABLE IF NOT EXISTS `characterinfo`(
+  `id` int(10) NOT NULL DEFAULT '0',
+  `name` varchar(100) NOT NULL,
+  `avatar_url` tinytext,
+  `rank` tinytext,
+  `rankicon` tinytext
+)ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- Data exporting was unselected.
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;

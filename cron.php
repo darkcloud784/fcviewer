@@ -33,40 +33,6 @@ $api = new Lodestone\Api;
 
 try {
     $freeCompany = $api->getFreeCompanyMembers($fc_id, 1);
-    $query = "TRUNCATE TABLE classinfo";
-    $mysqli->query($query) or die($mysqli->error);
-
-    foreach ($freeCompany['members'] as $member) {
-        $id = $member['id'];
-        $character = $api->getCharacter($id);
-        show("Processing: " . $id);
-        $avatar = $member['avatar'];
-        $name = $member['name'];
-        $rankicon = $member['rankicon'];
-        $rank = $member['rank'];
-        foreach ($character->getClassjobs() as $classJobs) {
-            $level = $classJobs->getLevel();
-            $jobName = $classJobs->getName();
-            $sql_columns = "id, name, rank, rankicon";
-            $sql_values = "\"$id\",\"$name\",\"$rank\",\"$rankicon\"";
-            for ($i = 0; $i < count($classJobs); $i++) {
-                $sql_columns .= ",`" . $jobName[$i] . "`";
-                if ($level[$i] != "-") {
-                    $sql_values .= "," . $level[$i];
-                } else {
-                    $sql_values .= ",0";
-                }
-            }
-            $sql_columns .= ", avatar_url";
-            $sql_values .= "\"$avatar\"";
-
-            $query = "INSERT INTO `classinfo` " . "($sql_columns)" . "VALUES($sql_values)";
-            show("Query: " . $query);
-            $mysqli->query($query) or die($mysqli->error);
-        }
-    }
-
-    closeDBConnection($mysqli);
 } catch (HttpMaintenanceValidationException $hmvex) {
     show('Lodestone is down for maintence');
 } catch (HttpNotFoundValidationException $hnfvex) {
@@ -74,5 +40,51 @@ try {
 } catch (ValidationException $vex) {
     show('Ninjas came and we were lucky to excape with our lives!');
 }
-    
 
+$query = "TRUNCATE TABLE characterinfo";
+$mysqli->query($query) or die($mysqli->error);
+$query = "TRUNCATE TABLE classinfo";
+$mysqli->query($query) or die($mysqli->error);
+
+
+foreach ($freeCompany['members'] as $member) {
+    $id = $member['id'];
+    $character = $api->getCharacter($id);
+    show("Processing: " . $id);
+    $avatar_url = mysqli_real_escape_string($mysqli,$member['avatar']);
+    $name = mysqli_real_escape_string($mysqli,$member['name']);
+    $rankicon_url = mysqli_real_escape_string($mysqli,$member['rankicon']);
+    $rank = mysqli_real_escape_string($mysqli,$member['rank']);
+        
+    $query = "INSERT INTO characterinfo(id, name, rank, rankicon_url, avatar_url)"
+           . "VALUES($id, $name, $rank, $rankicon_url, $avatar_url)";
+    show("Query: " . $query);
+    $mysqli->query($query) or die($mysqli->error);
+    
+    foreach ($character->getClassjobs() as $classJobs) {
+        $level = $classJobs->getLevel();
+        $jobName = $classJobs->getName();
+        
+        $sql_columns = "id";
+        $sql_values = "$id";
+        
+        for ($i = 0; $i < count($classJobs); $i++) {
+            
+            $sql_columns .= ',' . $jobName[$i];
+            //$sql_columns .= ",`" . $jobName[$i] . "`";
+            if ($level[$i] != "-") {
+                $sql_values .= $level[$i];
+            } else {
+                $sql_values .= ",0";
+            }
+        }
+        
+        //$sql_columns .= ", avatar_url";
+        //$sql_values .= "\"$avatar\"";
+
+        $query = "INSERT INTO `classinfo` " . "($sql_columns)" . "VALUES($sql_values)";
+        show("Query: " . $query);
+        $mysqli->query($query) or die($mysqli->error);
+    }
+}
+closeDBConnection($mysqli);
