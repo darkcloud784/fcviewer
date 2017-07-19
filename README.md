@@ -19,5 +19,5 @@ mysql -u username -p database_name < path_to_sql_file.sql
 
 1. Fill out config.php information.
 2. Setup cron for cron.php.
-⋅⋅* Lodestone updates once a day so creating a 15 min cron probably isn't going to do much.
+* Lodestone updates once a day so creating a 15 min cron probably isn't going to do much.
 3. Profit
