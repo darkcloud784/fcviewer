@@ -17,7 +17,7 @@ It is built on Viion's lodestone-php API. https://github.com/viion/lodestone-php
 mysql -u username -p database_name < path_to_sql_file.sql
 ```
 
-* Fill out config.php information.
-* Setup cron for cron.php.
-    Lodestone updates once a day so creating a 15 min cron probably isn't going to do much.
-* Profit
+1. Fill out config.php information.
+2. Setup cron for cron.php.
+* Lodestone updates once a day so creating a 15 min cron probably isn't going to do much.
+3. Profit
