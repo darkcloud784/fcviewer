@@ -52,9 +52,11 @@ function startTime() {
 
 function endTime() {
     if ($GLOBALS['debug']) {
+        global $finish;
         $finish = microtime(true);
         show("Memory Peak: " . cMem(memory_get_peak_usage()));
         show("Script ended.");
+        show($finish - $start);
     }
 }
 
@@ -74,3 +76,37 @@ function sqlError($int, $error) {
         echo "SQL Error $int: $error";
     }
 }
+function pager( $rows )
+{
+print "<div class='pager'> 
+        <img src='".curPageURL()."style/first.png' class='first'/> 
+        <img src='".curPageURL()."style/prev.png' class='prev'/> 
+        <span class='pagedisplay'></span>
+        <img src='".curPageURL()."style/next.png' class='next'/> 
+        <img src='".curPageURL()."style/last.png' class='last'/> 
+        <select class='pagesize' title='Select page size'>";
+        for ( $i=10; $i<=ceil($rows / 10) * 10; $i=$i+10 )
+			echo "<option value='$i'>$i</option>";
+			
+        print "</select>
+        <select class='gotoPage' title='Select page number'></select>
+</div>";
+}
+
+function curPageURL()
+{
+	$pageURL = 'http';
+	if ( isset( $_SERVER["HTTPS"] ) && strtolower( $_SERVER["HTTPS"] ) == "on" )
+		$pageURL .= "s";
+	$pageURL .= "://";
+	$pageURL .= $_SERVER["SERVER_NAME"].$_SERVER["REQUEST_URI"];
+	 
+	$pos = strrpos( $pageURL, basename( $pageURL ) );
+
+	if( $pos !== false )
+		$pageURL = substr_replace( $pageURL, "", $pos, strlen( $pageURL ) );
+		
+	return $pageURL;
+}
+
+

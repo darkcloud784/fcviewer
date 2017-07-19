@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "1979aad3d56c611e05e2d1f8bab83873",
+    "content-hash": "a2f8df87fb4254128e13f836f2df7e94",
     "packages": [
         {
             "name": "symfony/css-selector",
@@ -113,7 +113,8 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "viion/lodestone-php": 20
+        "viion/lodestone-php": 20,
+        "twbs/bootstrap": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,

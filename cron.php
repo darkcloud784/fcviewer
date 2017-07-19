@@ -28,6 +28,7 @@ require __DIR__ . '/vendor/autoload.php';
 require 'config.php';
 require 'functions.php';
 
+show(startTime());
 $mysqli = startDBConnection($dbserver, $dbuser, $dbpassword, $dbname, $dbport);
 $api = new Lodestone\Api;
 
@@ -61,44 +62,20 @@ foreach ($freeCompany['members'] as $member) {
     show("Query: " . $query);
     $mysqli->query($query) or die(sqlError($mysqli->errno, $mysqli->error));
 
-
-
     $sql_columns = "id";
     $sql_values = "$id";
 
     foreach ($character->getClassjobs() as $classJob) {
+        if ($classJob->getLevel() == "-")
+            continue;
         $sql_columns .= ',`' . $classJob->getName() . '`';
-        $sql_values .= ',' . ($classJob->getLevel() == "-" ? 0 : (int) $classJob->getLevel());
+        $sql_values .= ',' . (int) $classJob->getLevel();
     }
 
     $query = "INSERT INTO classinfo " . "($sql_columns)" . "VALUES($sql_values)";
     show("Query: " . $query);
     $mysqli->query($query) or die(sqlError($mysqli->errno, $mysqli->error));
-    /* foreach ($character->getClassjobs() as $classJobs) {
-      $level = $classJobs->getLevel();
-      $jobName = $classJobs->getName();
-
-      $sql_columns = "id";
-      $sql_values = "$id";
-
-      for ($i = 0; $i < count($classJobs); $i++) {
-
-      $sql_columns .= ',' . $jobName[$i];
-      //$sql_columns .= ",`" . $jobName[$i] . "`";
-      if ($level[$i] != "-") {
-      $sql_values .= $level[$i];
-      } else {
-      $sql_values .= ",0";
-      }
-      }
-
-      //$sql_columns .= ", avatar_url";
-      //$sql_values .= "\"$avatar\"";
-
-      $query = "INSERT INTO `classinfo` " . "($sql_columns)" . "VALUES($sql_values)";
-      show("Query: " . $query);
-      $mysqli->query($query) or die(sqlError($mysqli->errno, $mysqli->error));
-     */
 }
 
 closeDBConnection($mysqli);
+show(endTime());
