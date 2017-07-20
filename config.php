@@ -36,6 +36,16 @@ $dbport = "";
  */
 $fc_id = '9229001536389032942';
 
+/*
+ * Select how many members to view per page.
+ */
+$perPage = 30;
+
+/*
+ * Job types, and images. You can easily change the images by either overriding the images currently in the images folder OR by changing the array element associated with them.
+ * IE "images/secondary/paladin.png" or "images/bleh/herpaderpa.png"
+ */
+
 $jobs = array(
     array("name" => "Paladin", "type" => "battle", "image" => "images/paladin.png"),
     array("name" => "Warrior", "type" => "battle", "image" => "images/warrior.png"),
