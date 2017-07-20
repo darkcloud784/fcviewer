@@ -1,6 +1,5 @@
 <?php
-
-/* 
+/*
  * The MIT License
  *
  * Copyright 2017 DarkCloud.
@@ -30,73 +29,75 @@ startTime();
 $mysqli = startDBConnection($dbserver, $dbuser, $dbpassword, $dbname, $dbport);
 
 $query = "SELECT * FROM characterinfo LEFT JOIN classinfo ON characterinfo.id = classinfo.id;";
-$res = mysqli_query($mysqli,$query);
-if( !$res )
-	die( $mysqli->error );
-$obj = $res->fetch_object();
-$rows = intval( $obj->n );
-unset( $obj );
-unset( $res );
-print "<link rel='stylesheet' type='text/css' href='".curPageURL()."style/style.css'>
-		<script type='text/javascript' src='".curPageURL()."lib/jquery.tablesorter.min.js'></script>
-		<script type='text/javascript' src='".curPageURL()."lib/jquery.tablesorter.widgets.min.js'></script>
-		<script type='text/javascript' src='".curPageURL()."lib/jquery.tablesorter.pager.min.js'></script>";
-pager( $rows );
-echo "<table class='tablesorter'><thead><tr><th width='20%'>Name</th><th width='5%'>Rank</th>";
-
-// Generate table headers (this is also a decent place to fill our max values, there's no point doing a for loop twice)
-foreach( $jobs as $data )
-{
-		echo "<th class='".$data['type']."' title='".ucwords( $data['name'] )."'><img src=".curPageURL().$data['image']."></th>";
-		
-		//Max query and array storage
-		$query = "SELECT MAX( `".$data['name']."` ) FROM characterinfo LEFT JOIN classinfo ON characterinfo.id = classinfo.id;";
-		$res = $mysqli->query( $query );
-		if( !$res )
-			die( $mysqli->error );
-		$obj = $res->fetch_object();
-		$values[$data['name']] = intval( $obj->n );
-		unset( $obj );
-		unset( $res );
-}
-echo "</tr></thead><tbody>";
-
-// Generate our query
-$query = "SELECT * FROM characterinfo LEFT JOIN classinfo ON characterinfo.id = classinfo.id;";
-if ( $result = $mysqli->query( $query ) )
-{
-	// We have our result, generate our table data
-	foreach( $result as $row )
-	{
-		print "<tr>
-		<td width='20%' title='".$row['name']."' style='text-align: left;'><img class='members' src='".$row['avatar_url']."'/> <a href=http://eu.finalfantasyxiv.com/lodestone/character/".$row['id']."/ target=_blank>".$row['name']."</a></td>
-		<td>".$row['rank']."</td>";
-		foreach( $jobs as $data )
-		{
-			$row[$data['name']] == $values[$data['name']] ?	$num = "<b>".$row[$data['name']]."</b>" : $num = $row[$data['name']];
-			echo "<td class=".$data['name']." style='text-align: center;'>$num</td>";
-		}
-		echo "</tr>";
-	}
-	unset( $result );
-}
-else
-	die( $mysqli->error );
-
-echo "</tbody></table>";
-
-pager( $rows );
-closeDBConnection( $mysqli );
-endTime();
+$res = mysqli_query($mysqli, $query);
+if (!$res)
+    die(sqlError($mysqli->errno, $mysqli->error));
+$rows = $res->num_rows;
 ?>
+
+<link rel="stylesheet" type="text/css" href="./style/style.css">
+
+<?php
+pager($rows);
+?>
+
+<table class="tablesorter">
+    <thead>
+        <tr>   
+            <th width="18%" align="left">Name</th><th width="5%" align="left" >Rank</th>
+            <?php
+            foreach ($jobs as $data){
+                ?>
+            <?="<th class='".$data['type']."' title='".$data['name']."'><img src=".curPageURL().$data['image']."></th>"?>
+                <?php
+                }
+            ?>
+        </tr>
+    </thead>
+    <tbody>
+        <?php
+        while ($row = $res->fetch_assoc()) {
+            ?>
+            <tr>
+                <td title="<?= $row['name'] ?>" style="text-align: left;">
+                    <a href="http://na.finalfantasyxiv.com/lodestone/character/<?= $row['id'] ?>/"
+                       target=_blank>
+                        <img class="members" width="32" height="32" src="<?= $row['avatar_url'] ?>" />
+    <?= $row['name'] ?>
+                    </a>
+                </td>
+                <td><?= "<img src=" . $row['rankicon_url'] . " title=" . $row['rank'] .  " />" ?></td>
+    <?php
+    foreach ($jobs as $job) {
+        ?>
+                
+                    <td class="<?= preg_replace('/\s+/', '', $job['name']) ?>" 
+                        style="text-align: center;"><?= $row[$job['name']] ?></td>
+                    <?php
+                }
+                ?>
+            </tr>
+                <?php
+            }
+            ?>
+    </tbody>
+</table>
+        <?php
+        pager($rows);
+        closeDBConnection($mysqli);
+        endTime();
+        ?>
+<script type="text/javascript" src="./lib/jquery.tablesorter.min.js"></script>
+<script type="text/javascript" src="./lib/jquery.tablesorter.widgets.min.js"></script>
+<script type="text/javascript" src="./lib/jquery.tablesorter.pager.min.js"></script>
 <script type='text/javascript'>
-	jQuery('table').tablesorter({
-		widgets: ['zebra', 'columns'],
-		sortInitialOrder: "desc"
-	}).tablesorterPager({
-		container: jQuery(".pager"),
-		output: '{startRow} to {endRow} ({totalRows})',
-		size: <?php echo $perPage; ?>,
-		removeRows: true
-	});
+    jQuery('table').tablesorter({
+        widgets: ['zebra', 'columns'],
+        sortInitialOrder: "desc"
+    }).tablesorterPager({
+        container: jQuery(".pager"),
+        output: '{startRow} to {endRow} ({totalRows})',
+        size: <?= $perPage ?>,
+        removeRows: true
+    });
 </script>

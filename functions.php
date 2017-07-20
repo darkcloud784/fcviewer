@@ -52,11 +52,9 @@ function startTime() {
 
 function endTime() {
     if ($GLOBALS['debug']) {
-        global $finish;
         $finish = microtime(true);
         show("Memory Peak: " . cMem(memory_get_peak_usage()));
         show("Script ended.");
-        show($finish - $start);
     }
 }
 

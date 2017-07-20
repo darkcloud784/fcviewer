@@ -65,12 +65,11 @@ foreach ($freeCompany['members'] as $member) {
     $sql_columns = "id";
     $sql_values = "$id";
 
-    foreach ($character->getClassjobs() as $classJob) {
-        if ($classJob->getLevel() == "-")
-            continue;
-        $sql_columns .= ',`' . $classJob->getName() . '`';
-        $sql_values .= ',' . (int) $classJob->getLevel();
-    }
+foreach($character->getClassjobs() as $classJob) {
+	if ($classJob->getLevel() == "-") continue;
+	$sql_columns .= ',`' . mysqli_real_escape_string($mysqli,$classJob->getName()) . '`';
+	$sql_values .= ',' . (int)$classJob->getLevel();
+}
 
     $query = "INSERT INTO classinfo " . "($sql_columns)" . "VALUES($sql_values)";
     show("Query: " . $query);
