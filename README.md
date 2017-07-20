@@ -24,6 +24,7 @@ mysql -u username -p database_name < path_to_sql_file.sql
 
 ## Wordpress
  To get this to appear in Wordpress, I edit my own theme's functions.php (found in content/themes/xxx/functions.php - add one if it's not there if you like), and add the following code and then use [phpinclude]FreeCompany.php[/phpinclude]
+
  Make sure you place the enter fcviewer source in the root of your wordpress directory.
 
 ```php
